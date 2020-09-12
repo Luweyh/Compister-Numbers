@@ -1,1 +1,2 @@
-# Compister-Numbers
+# Composite-Numbers
+Program ask the user how many composite numbers to see and will later allign the out the prime numbers in equal columns and spacing and print them at a page at a time. This program involves using complicated nested for loops and storing values in arrays. This program inceases efficiency by keeping track of previous prime divisor and using those number to find future prime numbers. Advanced array pointers were used to keep track of previous prime numbers and prime divisors. A coutner variable to keep track of the current number that needs to be check and a bunch of jmp conditionals to find the right prime number.
