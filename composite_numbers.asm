@@ -1,10 +1,6 @@
-TITLE Composite Numbers    (Project 4)
+TITLE Composite Numbers    (composite_numbers.asm)
 
 ; Author: Luwey Hon
-; Last Modified: 5/7/2020
-; OSU email address: honl@oregonstate.edu
-; Course number/section: CS 271 C400
-; Project Number:    4             Due Date: 5/10/20
 ; Description: This program can calculates up to 10,000 composites.
 ;	The program first starts with an introduction and then ask the
 ;	user to insert a number in 1 - 10000, so they can see that many
@@ -45,16 +41,16 @@ UPPER_LIMIT = 10000
 
 ; variables that hold important value 
 	user_num		DWORD	?		; will hold user's number / input
-	ok_validation	DWORD	?		; will use this to determine if validation passes
+	ok_validation	DWORD	?			; will use this to determine if validation passes
 	divisor_num		DWORD	?		; test a divisor num to find composite
-test_composite_num	DWORD	2		; number that is being tested to be composite
-	is_composite	DWORD	?		; 0 = fail, 1 = passed composite
+test_composite_num	DWORD	2			; number that is being tested to be composite
+	is_composite	DWORD	?			; 0 = fail, 1 = passed composite
 	length_num		DWORD	?		; the length of number (how many digits)
 	counter			DWORD	?		; counts how many composite number been printed
-	prime_array		DWORD	5000 DUP(?)		; an array of prime numbers
+	prime_array		DWORD	5000 DUP(?)	; an array of prime numbers
 	array_size		DWORD	?
-	array_index		DWORD	?			; finds the indexy for the arra
-	not_prime		DWORD	?			; to test if it is not prime
+	array_index		DWORD	?		; finds the indexy for the arra
+	not_prime		DWORD	?		; to test if it is not prime
 	prime_counter	DWORD	1			; using for an ecx loop counter
 	largest_prime	DWORD	?			; finds the largest prime number
 	array_pointer	DWORD	?			; points to a certain positon in array
@@ -154,10 +150,10 @@ getUserData ENDP
 ; registers changed: eax, edx
 validate PROC
 	cmp		user_num, 1
-	jl		error_range					; less than 1
+	jl		error_range				; less than 1
 	mov		eax, user_num
 	cmp		eax, UPPER_LIMIT			; upper_limit = 10,0000
-	jg		error_range					; greater than 10,000
+	jg		error_range				; greater than 10,000
 	mov		ok_validation, 1			; 1 = passed validation
 	ret
 	
@@ -203,12 +199,12 @@ showComposites PROC
 	
 	; beginning of outter loop
 	check_number:
-		push	ecx							; save outter loop count
+		push	ecx						; save outter loop count
 	
 	; intializing inner loop that's in outter loop
 		inc		test_composite_num			; so that it test a new number 
 		mov		divisor_num, 2				; intialize initial divisor at 2
-		call	check_prime_divisors		; checks if composite with prime divisors
+		call	check_prime_divisors				; checks if composite with prime divisors
 		cmp		not_prime, 1				
 		je		print_composite				; printing number out since its composite
 		
@@ -220,13 +216,13 @@ showComposites PROC
 	; beginning of inner loop. 
 	check_composite:
 		call	isComposite				; sub-procedure to check for composite
-										; True = 1 , False = 0
+								; True = 1 , False = 0
 		cmp		is_composite, 1
 		je		print_composite			; if it is composite, print it out
 
 		inc		divisor_num
-		loop	check_composite		; loops until composite is found or if number is prime
-									; end of inner loop
+		loop	check_composite				; loops until composite is found or if number is prime
+								; end of inner loop
 
 	; will store the prime numbers in an array since it's not composite
 		call store_prime_numbers
@@ -240,8 +236,8 @@ showComposites PROC
 		call	new_page				; prints a page at a time
 		call	WriteDec
 		inc		counter
-		call	length_of_num			; finds the length of number
-		call	even_spacing			; prints even spacing
+		call	length_of_num				; finds the length of number
+		call	even_spacing				; prints even spacing
 		call	new_line				; test to see if it needs a new line
 		mov		eax, counter
 		cmp		eax, user_num			; if the counter = the amount of composite
@@ -249,8 +245,8 @@ showComposites PROC
 		inc		divisor_num
 	
 	next_number:
-		pop		ecx						; restore ecx so outter loop can work
-		loop	check_number			; checks a new number. end of outer loop
+		pop		ecx				; restore ecx so outter loop can work
+		loop	check_number				; checks a new number. end of outer loop
 	
 
 	
@@ -259,7 +255,7 @@ showComposites PROC
 
 	no_more_loop:			
 
-		pop ecx				; to allign stack since I pushed ecx in inner loop
+		pop ecx					; to allign stack since I pushed ecx in inner loop
 		ret					; this ret happens when they didn't choose max edge case
 							; i.e in [1 .. 10000) non inclusive
 
@@ -276,19 +272,19 @@ check_prime_divisors PROC
 ;loop counter is how many element in the prime numbers array
 	mov		ecx, prime_counter			
 
-	mov		ebp, 0		; this will change the position 
+	mov		ebp, 0				; this will change the position 
 
 check_composites:
 
-	call	array_value		; finds the array value at a certain position
+	call	array_value				; finds the array value at a certain position
 							; and will store it in ebx
 
 ; loops and checks every prime number divisibility
 	mov		not_prime, 0			; initialze not prime = false
 	mov		eax, test_composite_num
 	cdq
-	div		ebx					; value of the specifc array
-	add		ebp, 4			; used to increase the position of the array every loop
+	div		ebx				; value of the specifc array
+	add		ebp, 4				; used to increase the position of the array every loop
 	cmp		edx, 0				; if the remainder is 0, it means not prime
 	je		notPrime			; jumps out of loop if not prime
 	loop	check_composites
@@ -317,7 +313,7 @@ array_value PROC
 	push	ebp
 	mov		esi, OFFSET prime_array
 	add		esi, ebp
-	mov		ebx, [esi]	; push the value of the array onto the stack
+	mov		ebx, [esi]		; push the value of the array onto the stack
 	pop		ebp			; stores the value in ebp
 					
 	ret
@@ -332,12 +328,12 @@ array_value ENDP
 isComposite PROC
 	
 	mov		is_composite, 0				; intialzie to make it not composite for future loops
-	mov		eax, test_composite_num		; number being tested
+	mov		eax, test_composite_num			; number being tested
 	cdq
 	mov		ebx, divisor_num			; a divisor number
 	div		ebx
 	cmp		edx, 0					; if the remainder is 0, then it's a composite number
-	jne		not_composite			; since these means two integers multiplies to it
+	jne		not_composite				; since these means two integers multiplies to it
 	
 	; makes the current number composite
 	composite:
@@ -383,7 +379,7 @@ length_of_num PROC
 		push eax
 
 		cmp eax, 9					; comparing the fib number to actual sizes of numbers
-		jle	one_digit					; this has 1 digit
+		jle one_digit					; this has 1 digit
 		cmp eax, 99
 		jle two_digit					; this has 2 digits 
 		cmp eax, 999
@@ -400,12 +396,12 @@ length_of_num PROC
 		jle eight_digit
 		cmp eax, 999999999
 		jle nine_digit
-		cmp eax, 4294967294			;  the maximum size of DWORD 
+		cmp eax, 4294967294				;  the maximum size of DWORD 
 		jle ten_digit
 
 		
 		; increases the length for every digit
-		ten_digit:						; 10 digits adds 1 ten times
+		ten_digit:					; 10 digits adds 1 ten times
 			inc length_num			
 		nine_digit:
 			inc length_num
@@ -440,13 +436,13 @@ even_spacing PROC uses ecx edx
 		
 	;initialize the loop
 		mov		ecx, 13					; total spacing between integer
-		sub		ecx, length_num		; decrease total spacing depending on length of integer
+		sub		ecx, length_num				; decrease total spacing depending on length of integer
 
 	;loops and prints 1 space a time
 	print_spacing:
 		mov		edx, OFFSET add_space
 		call	WriteString				; prints 1 space
-		loop	print_spacing			; continues looping
+		loop	print_spacing				; continues looping
 																				
 		ret
 
@@ -462,7 +458,7 @@ new_line PROC uses eax ebx edx
 	
 	mov		eax, counter		; how many composite numbers
 	cdq
-	mov		ebx, 9		; 9 digits for line (for extra credit so it fits in one page a time)
+	mov		ebx, 9			; 9 digits for line (for extra credit so it fits in one page a time)
 	div		ebx
 	cmp		edx, 0			; comparing the remainder to 0
 	je		print_line		; if it divisible by 9, print new line
@@ -536,7 +532,7 @@ view_prime_numbers PROC
 	add eax, 1				; adjusting array size since I added 2 manually
 							; to my prime list
 	
-	mov array_size, eax		; storing array size
+	mov array_size, eax			; storing array size
 
 ; initializing the loop to print the prime
 	mov esi, OFFSET prime_array
@@ -552,7 +548,7 @@ view_prime_numbers PROC
 		call	even_spacing			; prints even spacing
 		call	prime_new_line			; test to see if it needs a new line
 		
-		add ebx, 4					; to point next position in array
+		add ebx, 4				; to point next position in array
 		loop print_primes
 	
 	call	crlf
@@ -579,12 +575,12 @@ prime_new_page PROC uses eax ebx
 ; to print pages 2 and up evenly
 	mov		eax, prime_counters
 	cdq
-	mov		ebx, 225		; 9 digits each line. to fill up whole page
+	mov		ebx, 225			; 9 digits each line. to fill up whole page
 							; i left extra buffer because it will later inform
 							; to see prime numbers
 							
 	div		ebx
-	cmp		edx, 0			; if the remainder is 0, which means divisible by 300
+	cmp		edx, 0				; if the remainder is 0, which means divisible by 300
 	je		next_page
 	jmp		no_next_page
 
